@@ -79,6 +79,7 @@ public class CircularList<E> extends AbstractList<E> {
 	public E removeFirst(){
 		Node<E> temp = tail.next();
 		tail.setNext(temp.next());
+		count--;
 		return temp.value();
 	}
 
