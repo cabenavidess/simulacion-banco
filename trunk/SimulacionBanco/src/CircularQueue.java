@@ -121,7 +121,7 @@ public class CircularQueue<E> extends AbstractQueue<E>{
 	@Override
 	public int size() {
 		// TODO Auto-generated method stub
-		return 0;
+		return datos.size();
 	}
 	@Override
 	public Object[] toArray() {
