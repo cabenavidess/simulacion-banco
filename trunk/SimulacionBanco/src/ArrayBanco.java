@@ -4,17 +4,15 @@ import java.util.Random;
 import java.util.Scanner;
 
 /**
- * Fecha: 01 de septiembre de 2011
- * Descripcion: Este programa permite simular el comportamiento de las colas en un banco.
- * 				Se tienen 4 ventanillas en el banco, una cola de ingreso y las acciones se
- * 				manejan a traves de una lista de eventos. 
+ * 
  */
 
 /**
  * @author Medrano
  *
  */
-public class Banco {
+public class ArrayBanco {
+
 
 	/**
 	 * Método principal. Es el que se ejecuta al crear esta clase.
@@ -27,25 +25,22 @@ public class Banco {
 		System.out.println("              --      Bienvenido al banco UVG      --");
 		System.out.println("              ---------------------------------------");
 		
-		CircularQueue<Client<Integer>> ventanilla1 = new CircularQueue<Client<Integer>>();
-		CircularQueue<Client<Integer>> ventanilla2 = new CircularQueue<Client<Integer>>();
-		CircularQueue<Client<Integer>> ventanilla3 = new CircularQueue<Client<Integer>>();
-		CircularQueue<Client<Integer>> ventanilla4 = new CircularQueue<Client<Integer>>();
+		ArrayQueue<Client<Integer>> ventanilla1 = new ArrayQueue<Client<Integer>>(10);
+		ArrayQueue<Client<Integer>> ventanilla2 = new ArrayQueue<Client<Integer>>(10);
+		ArrayQueue<Client<Integer>> ventanilla3 = new ArrayQueue<Client<Integer>>(10);
+		ArrayQueue<Client<Integer>> ventanilla4 = new ArrayQueue<Client<Integer>>(10);
 		
 		LinkedList<Client<Integer>> eventos = new LinkedList<Client<Integer>>();
 		
 		
 		int entrada[]=new int[40];
 		
-		int t_wait_1=0;
-		int t_wait_2=0;
-		int t_wait_3=0;
-		int t_wait_4=0;
-		
 		int t_arrival=0;
 		int clientes_ingresados=0;
 		
 		int tiempos[]=new int[4];
+		
+		int total=0;
 		
 		
 		
@@ -64,20 +59,25 @@ public class Banco {
 						entrada[clientes_ingresados]=t_arrival;
 						clientes_ingresados++;
 					}else{
-						System.out.println(" El tiempo debe ser un numero entre "+entrada[clientes_ingresados-1]+" y 480");
+						if(t_arrival>0){
+							System.out.println(" El tiempo debe ser un numero entre "+entrada[clientes_ingresados-1]+" y 480");
+						}
 					}
 				}
-			}while(t_arrival>=0 && clientes_ingresados<=40);
+			}while(t_arrival>=0 && clientes_ingresados<40);
 			
 			
 			
 			System.out.println(" La cantidad de clientes fue: "+clientes_ingresados);
 			
-			createEventList(eventos,entrada);
+			createEventList(eventos,entrada,clientes_ingresados);
 			
 			tiempos = executeEventList(eventos,entrada,ventanilla1,ventanilla2,ventanilla3,ventanilla4);
 		
+			total=tiempos[0]+tiempos[1]+tiempos[2]+tiempos[3];
+			total=total/clientes_ingresados;
 			
+			System.out.println("El tiempo promedio es : " + total );
 			
 
 	}
@@ -89,27 +89,39 @@ public class Banco {
 	 * @param c2	Representa la ventanilla 2
 	 * @param c3	Representa la ventanilla 3
 	 * @param c4	Representa la ventanilla 4
-	 * @return		CircularQueue<Cliente<Integer>> ventanilla 		Referencia a la ventanilla mas corta
+	 * @return		ArrayQueue<Cliente<Integer>> ventanilla 		Referencia a la ventanilla mas corta
 	 */
-	public static CircularQueue<Client<Integer>> getSmallerQueue(CircularQueue<Client<Integer>> c1,  CircularQueue<Client<Integer>> c2,  CircularQueue<Client<Integer>> c3,  CircularQueue<Client<Integer>> c4){
+	public static ArrayQueue<Client<Integer>> getSmallerQueue(ArrayQueue<Client<Integer>> c1,  ArrayQueue<Client<Integer>> c2,  ArrayQueue<Client<Integer>> c3,  ArrayQueue<Client<Integer>> c4){
 		
 		int sizes[] = new int[4];
 		int menor = 0;
+		int menor1=0;
+		int menor2=0;
 		sizes[0] =  c1.size();
 		sizes[1] = c2.size();
 		sizes[2] = c3.size();
-		sizes[4] = c4.size();
-		selection_sort(sizes,sizes.length);
-		menor = sizes[0];
+		sizes[3] = c4.size();
+
+		menor1 = Math.min(sizes[0], sizes[1]);
+		menor2= Math.min(sizes[2],sizes[3]);
+		menor = Math.min(menor1,menor2);
 		if(menor == c1.size()){
 			return c1;
-		}if (menor == c2.size()){
-			return c2;
-		}if (menor == c3.size()){
-			return c3;
 		}else{
-			return c4;
-		}	
+			if(menor == c2.size()){
+				return c2;
+			}else{
+				if(menor == c3.size()){
+					return c3;
+				}else{
+					if(menor == c4.size()){
+						return c4;
+					}else{
+						return c1;
+					}
+				}
+			}
+		}
 	}
 	
 	/**
@@ -117,9 +129,9 @@ public class Banco {
 	 * @param events		Lista de eventos 
 	 * @param ingreso		Arreglo con los clientes ingresados
 	 */
-	public static void createEventList(LinkedList<Client<Integer>> events, int[] ingreso){
+	public static void createEventList(LinkedList<Client<Integer>> events, int[] ingreso,int ingresados){
 		Random rand = new Random();
-		for(int i=0; i<ingreso.length;i++){
+		for(int i=0; i<ingresados;i++){
 			events.add(new Client<Integer>(ingreso[i],rand.nextInt(31)+1,-1));
 		}		
 	}
@@ -135,26 +147,22 @@ public class Banco {
 	 * @param c4			Ventanilla 4	
 	 * @return				Arreglo de tiempos promedio por cada cola
 	 */
-	public static int[] executeEventList(LinkedList<Client<Integer>> events, int[] ingreso, CircularQueue<Client<Integer>> c1,  CircularQueue<Client<Integer>> c2,  CircularQueue<Client<Integer>> c3,  CircularQueue<Client<Integer>> c4){
+	public static int[] executeEventList(LinkedList<Client<Integer>> events, int[] ingreso, ArrayQueue<Client<Integer>> c1,  ArrayQueue<Client<Integer>> c2,  ArrayQueue<Client<Integer>> c3,  ArrayQueue<Client<Integer>> c4){
 		//Random rand = new Random();
-		int procesados=0;
+
 		
-		int[] promedios = new int[4];
-		promedios[0]=0;
-		promedios[1]=0;
-		promedios[2]=0;
-		promedios[3]=0;
+		int[] promedios = new int[4];			//Arreglo que almacena el tiempo promedio para cada 
+		promedios[0]=0;							//Tiempo promedio de cola 1
+		promedios[1]=0;							//Tiempo promedio de cola 2
+		promedios[2]=0;							//Teimpo promedio de cola 3
+		promedios[3]=0;							//Tiempo promedio de cola 4
 		
-		int t_wait_1=0;
-		int t_wait_2=0;
-		int t_wait_3=0;
-		int t_wait_4=0;
-		
+
 		int esperado=0;
 		
-		CircularQueue<Client<Integer>> cola_temp;
+		ArrayQueue<Client<Integer>> cola_temp;		//Este es el evento que se esta ejecutnado actualmente
 		
-		Client<Integer> temp2 = null;
+		Client<Integer> temp2 = null;					//Permite guardar una referencia al ultimo elemento de cada ventanilla
 		Client<Integer>	temp3 = null;
 		Client<Integer>	temp4 = null;
 		Client<Integer>	temp5 = null;
@@ -162,36 +170,54 @@ public class Banco {
 		Client<Integer>	temp7 = null;
 		Client<Integer>	temp8 = null;
 		Client<Integer>	temp9 = null;
-		Client<Integer> new_event=null;
+		Client<Integer>	tempo = null;
+		
+		printEventList(events);
 		
 		do{
+		if(!events.isEmpty()){
 		
-		Client<Integer> temp = events.removeFirst();
+		Client<Integer> temp = events.removeFirst();	//Procesar el primer elemento de la lista de eventos
 		
 		if(temp.getRetreival()==-1){		//Verificar si es evento de entrada
 			cola_temp = getSmallerQueue(c1,c2,c3,c4);	//Obtener cuál de las colas tiene menor tamaño
 			if(cola_temp==c1){	//Comparar si la cola de menor tamaño es la cola 1
 				if(c1.isEmpty()){
 					c1.offer(new Client<Integer>(temp.getArrival(),temp.getDuration(),temp.getArrival()+temp.getDuration())); //Añadir a la cola
+					System.out.println("****************************************************");
+					printEventList(events);
+					System.out.println("****************************************************");
 					temp2=c1.element();
+					temp3=temp2;
 				}else{
 					temp3 = new Client<Integer>(temp.getArrival(),temp.getDuration(),temp2.getRetreival()+temp.getDuration());
 					c1.offer(temp3);
-					temp2= temp3;					
+					temp2= temp3;	
+					System.out.println("****************************************************");
+					printEventList(events);
+					System.out.println("****************************************************");
+					
 				}
 				
 				if(events.isEmpty()){		//Si la lista de eventos esta vacia ahora, añadir el evento de salida sin más
-					events.add(new Client<Integer>(c1.peek().getRetreival(),1,-2));		// Añadir evento de salida (Ocurrencia, # de cola, -2 indica que es salida)
+					events.add(new Client<Integer>(temp3.getRetreival(),1,-2));		// Añadir evento de salida (Ocurrencia, # de cola, -2 indica que es salida)
 				}else{						//Si la lista no esta vacia, buscar la posicion en donde debe ir este evento de salida
 					Client<Integer> eventosalida = new Client<Integer>(temp3.getRetreival(),1,-2);
-					for(int j=0; j< events.size(); j++){	//Recorrer toda la lsita de eventos		
-						if(events.get(j).getArrival()> eventosalida.getArrival()){		//Si el tiempo de ocurrencia del evento en la posicion j es mayor
-							events.add(j-1, eventosalida);								// que el tiempo de ocurrencia del evento de salida, entonces el evento
-							j=events.size()+3;											// de salida debe ir antes que este otro evento, y debe terminar la busqueda
-						}	
+					for(int j=0; j<=events.size(); j++){	//Recorrer toda la lsita de eventos		
 						if(j==events.size()){				//Si no hay ningun evento que suceda despues que este evento de salida
 							events.add(eventosalida);		// Añadirlo al final
+							j=events.size()+3;		
 						}
+						else if(events.get(j).getArrival()> eventosalida.getArrival()){		//Si el tiempo de ocurrencia del evento en la posicion j es mayor
+							if(j==0){
+								events.addFirst(eventosalida);
+								j=events.size()+3;
+							}else{
+								events.add(j, eventosalida);								// que el tiempo de ocurrencia del evento de salida, entonces el evento
+								j=events.size()+3;											// de salida debe ir antes que este otro evento, y debe terminar la busqueda
+							}
+						}	
+						
 					}					
 				}
 			
@@ -200,6 +226,7 @@ public class Banco {
 				if(c2.isEmpty()){
 					c2.offer(new Client<Integer>(temp.getArrival(),temp.getDuration(),temp.getArrival()+temp.getDuration())); //Añadir a la cola
 					temp4=c2.element();
+					temp5=temp4;
 				}else{
 					temp5 = new Client<Integer>(temp.getArrival(),temp.getDuration(),temp4.getRetreival()+temp.getDuration());
 					c2.offer(temp5);
@@ -207,17 +234,24 @@ public class Banco {
 				}
 				
 				if(events.isEmpty()){		//Si la lista de eventos esta vacia ahora, añadir el evento de salida sin más
-					events.add(new Client<Integer>(c2.peek().getRetreival(),1,-2));		// Añadir evento de salida (Ocurrencia, # de cola, -2 indica que es salida)
+					events.add(new Client<Integer>(temp5.getRetreival(),2,-2));		// Añadir evento de salida (Ocurrencia, # de cola, -2 indica que es salida)
 				}else{						//Si la lista no esta vacia, buscar la posicion en donde debe ir este evento de salida
-					Client<Integer> eventosalida = new Client<Integer>(temp5.getRetreival(),1,-2);
-					for(int j=0; j< events.size(); j++){	//Recorrer toda la lsita de eventos		
-						if(events.get(j).getArrival()> eventosalida.getArrival()){		//Si el tiempo de ocurrencia del evento en la posicion j es mayor
-							events.add(j-1, eventosalida);								// que el tiempo de ocurrencia del evento de salida, entonces el evento
-							j=events.size()+3;											// de salida debe ir antes que este otro evento, y debe terminar la busqueda
-						}	
+					Client<Integer> eventosalida = new Client<Integer>(temp5.getRetreival(),2,-2);
+					for(int j=0; j<=events.size(); j++){	//Recorrer toda la lsita de eventos		
 						if(j==events.size()){				//Si no hay ningun evento que suceda despues que este evento de salida
 							events.add(eventosalida);		// Añadirlo al final
+							j=events.size()+3;		
 						}
+						else if(events.get(j).getArrival()> eventosalida.getArrival()){		//Si el tiempo de ocurrencia del evento en la posicion j es mayor
+							if(j==0){
+								events.addFirst(eventosalida);
+								j=events.size()+3;
+							}else{
+								events.add(j, eventosalida);								// que el tiempo de ocurrencia del evento de salida, entonces el evento
+								j=events.size()+3;											// de salida debe ir antes que este otro evento, y debe terminar la busqueda
+							}
+						}	
+						
 					}					
 				}
 			
@@ -226,6 +260,7 @@ public class Banco {
 				if(c3.isEmpty()){
 					c3.offer(new Client<Integer>(temp.getArrival(),temp.getDuration(),temp.getArrival()+temp.getDuration())); //Añadir a la cola
 					temp6=c3.element();
+					temp7=temp6;
 				}else{
 					temp7 = new Client<Integer>(temp.getArrival(),temp.getDuration(),temp6.getRetreival()+temp.getDuration());
 					c3.offer(temp7);
@@ -233,17 +268,25 @@ public class Banco {
 				}
 				
 				if(events.isEmpty()){		//Si la lista de eventos esta vacia ahora, añadir el evento de salida sin más
-					events.add(new Client<Integer>(c3.peek().getRetreival(),1,-2));		// Añadir evento de salida (Ocurrencia, # de cola, -2 indica que es salida)
+					events.add(new Client<Integer>(temp7.getRetreival(),3,-2));		// Añadir evento de salida (Ocurrencia, # de cola, -2 indica que es salida)
 				}else{						//Si la lista no esta vacia, buscar la posicion en donde debe ir este evento de salida
-					Client<Integer> eventosalida = new Client<Integer>(temp7.getRetreival(),1,-2);
-					for(int j=0; j< events.size(); j++){	//Recorrer toda la lsita de eventos		
-						if(events.get(j).getArrival()> eventosalida.getArrival()){		//Si el tiempo de ocurrencia del evento en la posicion j es mayor
-							events.add(j-1, eventosalida);								// que el tiempo de ocurrencia del evento de salida, entonces el evento
-							j=events.size()+3;											// de salida debe ir antes que este otro evento, y debe terminar la busqueda
-						}	
+					Client<Integer> eventosalida = new Client<Integer>(temp7.getRetreival(),3,-2);
+					for(int j=0; j<=events.size(); j++){	//Recorrer toda la lsita de eventos		
 						if(j==events.size()){				//Si no hay ningun evento que suceda despues que este evento de salida
 							events.add(eventosalida);		// Añadirlo al final
+							j=events.size()+3;		
 						}
+						else if(events.get(j).getArrival()> eventosalida.getArrival()){		//Si el tiempo de ocurrencia del evento en la posicion j es mayor
+							if(j==0){
+								events.addFirst(eventosalida);
+								j=events.size()+3;
+								
+							}else{
+								events.add(j, eventosalida);								// que el tiempo de ocurrencia del evento de salida, entonces el evento
+								j=events.size()+3;											// de salida debe ir antes que este otro evento, y debe terminar la busqueda
+							}
+						}	
+						
 					}					
 				}
 			
@@ -252,6 +295,7 @@ public class Banco {
 				if(c4.isEmpty()){
 					c4.offer(new Client<Integer>(temp.getArrival(),temp.getDuration(),temp.getArrival()+temp.getDuration())); //Añadir a la cola
 					temp8=c4.element();
+					temp9=temp8;
 				}else{
 					temp9 = new Client<Integer>(temp.getArrival(),temp.getDuration(),temp8.getRetreival()+temp.getDuration());
 					c4.offer(temp9);
@@ -259,44 +303,60 @@ public class Banco {
 				}
 				
 				if(events.isEmpty()){		//Si la lista de eventos esta vacia ahora, añadir el evento de salida sin más
-					events.add(new Client<Integer>(c4.peek().getRetreival(),1,-2));		// Añadir evento de salida (Ocurrencia, # de cola, -2 indica que es salida)
+					events.add(new Client<Integer>(temp9.getRetreival(),4,-2));		// Añadir evento de salida (Ocurrencia, # de cola, -2 indica que es salida)
 				}else{						//Si la lista no esta vacia, buscar la posicion en donde debe ir este evento de salida
-					Client<Integer> eventosalida = new Client<Integer>(temp9.getRetreival(),1,-2);
-					for(int j=0; j< events.size(); j++){	//Recorrer toda la lsita de eventos		
-						if(events.get(j).getArrival()> eventosalida.getArrival()){		//Si el tiempo de ocurrencia del evento en la posicion j es mayor
-							events.add(j-1, eventosalida);								// que el tiempo de ocurrencia del evento de salida, entonces el evento
-							j=events.size()+3;											// de salida debe ir antes que este otro evento, y debe terminar la busqueda
-						}	
+					Client<Integer> eventosalida = new Client<Integer>(temp9.getRetreival(),4,-2);
+					for(int j=0; j<=events.size(); j++){	//Recorrer toda la lsita de eventos		
 						if(j==events.size()){				//Si no hay ningun evento que suceda despues que este evento de salida
 							events.add(eventosalida);		// Añadirlo al final
+							j=events.size()+3;		
 						}
+						else if(events.get(j).getArrival()> eventosalida.getArrival()){		//Si el tiempo de ocurrencia del evento en la posicion j es mayor
+							if(j==0){
+								events.addFirst(eventosalida);
+								j=events.size()+3;
+							}else{
+								events.add(j, eventosalida);								// que el tiempo de ocurrencia del evento de salida, entonces el evento
+								j=events.size()+3;											// de salida debe ir antes que este otro evento, y debe terminar la busqueda
+							}
+						}	
+						
 					}					
 				}
 			
 			}
 		}if(temp.getRetreival()==-2){
 			if(temp.getDuration()==1){
-				temp = c1.remove();
-				esperado = temp.getRetreival()-temp.getArrival();
-				promedios[1]+=esperado;
+				if(!c1.isEmpty()){
+					tempo = c1.remove();
+					esperado = tempo.getRetreival()-tempo.getArrival();
+					promedios[0]+=esperado;
+				}
 			}
 			if(temp.getDuration()==2){
-				temp = c2.remove();
-				esperado = temp.getRetreival()-temp.getArrival();
-				promedios[2]+=esperado;
+				if(!c2.isEmpty()){
+					tempo = c2.remove();
+					esperado = tempo.getRetreival()-tempo.getArrival();
+					promedios[1]+=esperado;				
+				}
 			}
 			if(temp.getDuration()==3){
-				temp = c3.remove();
-				esperado = temp.getRetreival()-temp.getArrival();
-				promedios[3]+=esperado;
+				if(!c3.isEmpty()){
+					tempo = c3.remove();
+					esperado = tempo.getRetreival()-tempo.getArrival();
+					promedios[2]+=esperado;
+				}
 			}
 			if(temp.getDuration()==4){
-				temp = c4.remove();
-				esperado = temp.getRetreival()-temp.getArrival();
-				promedios[4]+=esperado;
+				if(!c4.isEmpty()){
+					tempo = c4.remove();
+					esperado = tempo.getRetreival()-tempo.getArrival();
+					promedios[3]+=esperado;
+				}
 			}		
 		}
-	
+		}
+		
 		}while(!events.isEmpty());
 		
 		return promedios;
@@ -325,6 +385,16 @@ public class Banco {
             array[indice_del_menor] = temp;
         }
     }
+   
+  
+   	public static void printEventList(LinkedList<Client<Integer>> eventoss){
+   		System.out.println("-----------------------------------------------------");
+   		for(int k=0; k<eventoss.size(); k++){
+   			System.out.println(eventoss.get(k));
+   		}
+   		System.out.println("-----------------------------------------------------");
+   		
+   	}
 
 
 	

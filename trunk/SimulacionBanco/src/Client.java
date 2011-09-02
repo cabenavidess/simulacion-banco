@@ -100,6 +100,14 @@ public class Client<E> {
 	}
 	
 	
+	public String toString(){
+		String descripcion="";
+		descripcion+= "LLegada  :"+arrival+"  ";
+		descripcion+= "Duracion :"+duration+"  ";
+		descripcion+= "Salida   :"+retreival+"  ";
+		return descripcion;
+	}
+	
 	
 
 }
