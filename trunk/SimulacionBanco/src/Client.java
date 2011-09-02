@@ -100,6 +100,10 @@ public class Client<E> {
 	}
 	
 	
+	/**
+	 * Permite obtener una representación en texto de este Client
+	 * @return	String descripcion		Valor de los atributos en forma de String
+	 */
 	public String toString(){
 		String descripcion="";
 		descripcion+= "LLegada  :"+arrival+"  ";

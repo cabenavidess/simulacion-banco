@@ -37,7 +37,7 @@ public class BancoTest {
 				ventanilla4.offer(temp);
 			}
 		}		
-		assertEquals(ventanilla1,Banco.getSmallerQueue(ventanilla1, ventanilla2, ventanilla3, ventanilla4));
+		assertEquals(ventanilla1,CircularBanco.getSmallerQueue(ventanilla1, ventanilla2, ventanilla3, ventanilla4));
 	}
 
 

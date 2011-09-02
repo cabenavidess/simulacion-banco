@@ -4,7 +4,11 @@ import java.util.Random;
 import java.util.Scanner;
 
 /**
- * 
+ * Fecha: 01 de septiembre de 2011
+ * Descripcion: Este programa permite simular el comportamiento de las colas en un banco.
+ * 				Se tienen 4 ventanillas en el banco, una cola de ingreso y las acciones se
+ * 				manejan a traves de una lista de eventos.  La cola es representada utilizando
+ * 				una arreglo unidimensional.
  */
 
 /**
@@ -24,6 +28,8 @@ public class ArrayBanco {
 		System.out.println("              ---------------------------------------");
 		System.out.println("              --      Bienvenido al banco UVG      --");
 		System.out.println("              ---------------------------------------");
+		System.out.println("A continuacion ingrese el tiempo de llegada de cada cliente: ");
+		
 		
 		ArrayQueue<Client<Integer>> ventanilla1 = new ArrayQueue<Client<Integer>>(10);
 		ArrayQueue<Client<Integer>> ventanilla2 = new ArrayQueue<Client<Integer>>(10);
@@ -46,7 +52,7 @@ public class ArrayBanco {
 		
 		
 			do{
-				t_arrival = (int)ingresar("Ingrese el tiempo de llegada del cliente "+(clientes_ingresados +1)+" o un numero negativo para terminar", "El dato ingresado no es valido");
+				t_arrival = (int)ingresar("Cliente "+(clientes_ingresados +1)+"(o -1 para terminar): ", "El dato ingresado no es valido");
 				if(clientes_ingresados==0){
 					if(t_arrival>0 && t_arrival<481){
 						entrada[clientes_ingresados]=t_arrival;
@@ -68,7 +74,7 @@ public class ArrayBanco {
 			
 			
 			
-			System.out.println(" La cantidad de clientes fue: "+clientes_ingresados);
+			//System.out.println(" La cantidad de clientes fue: "+clientes_ingresados);
 			
 			createEventList(eventos,entrada,clientes_ingresados);
 			
@@ -77,7 +83,10 @@ public class ArrayBanco {
 			total=tiempos[0]+tiempos[1]+tiempos[2]+tiempos[3];
 			total=total/clientes_ingresados;
 			
-			System.out.println("El tiempo promedio es : " + total );
+			System.out.println(" ++++++++++++++++++++++++++++++++++++++++++++++++++++");
+			System.out.println(" |  La cantidad de clientes fue: "+clientes_ingresados+"                 |");
+			System.out.println(" |  El tiempo promedio de espera es : " + total +"            |" );
+			System.out.println(" ++++++++++++++++++++++++++++++++++++++++++++++++++++");
 			
 
 	}
@@ -132,7 +141,7 @@ public class ArrayBanco {
 	public static void createEventList(LinkedList<Client<Integer>> events, int[] ingreso,int ingresados){
 		Random rand = new Random();
 		for(int i=0; i<ingresados;i++){
-			events.add(new Client<Integer>(ingreso[i],rand.nextInt(31)+1,-1));
+			events.add(new Client<Integer>(ingreso[i],rand.nextInt(30)+1,-1));
 		}		
 	}
 	
@@ -172,7 +181,7 @@ public class ArrayBanco {
 		Client<Integer>	temp9 = null;
 		Client<Integer>	tempo = null;
 		
-		printEventList(events);
+		//printEventList(events);
 		
 		do{
 		if(!events.isEmpty()){
@@ -184,18 +193,18 @@ public class ArrayBanco {
 			if(cola_temp==c1){	//Comparar si la cola de menor tamaño es la cola 1
 				if(c1.isEmpty()){
 					c1.offer(new Client<Integer>(temp.getArrival(),temp.getDuration(),temp.getArrival()+temp.getDuration())); //Añadir a la cola
-					System.out.println("****************************************************");
-					printEventList(events);
-					System.out.println("****************************************************");
+					//System.out.println("****************************************************");
+					//printEventList(events);
+					//ystem.out.println("****************************************************");
 					temp2=c1.element();
 					temp3=temp2;
 				}else{
 					temp3 = new Client<Integer>(temp.getArrival(),temp.getDuration(),temp2.getRetreival()+temp.getDuration());
 					c1.offer(temp3);
 					temp2= temp3;	
-					System.out.println("****************************************************");
-					printEventList(events);
-					System.out.println("****************************************************");
+					//System.out.println("****************************************************");
+					//printEventList(events);
+					//System.out.println("****************************************************");
 					
 				}
 				
