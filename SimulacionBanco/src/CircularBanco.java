@@ -7,7 +7,8 @@ import java.util.Scanner;
  * Fecha: 01 de septiembre de 2011
  * Descripcion: Este programa permite simular el comportamiento de las colas en un banco.
  * 				Se tienen 4 ventanillas en el banco, una cola de ingreso y las acciones se
- * 				manejan a traves de una lista de eventos. 
+ * 				manejan a traves de una lista de eventos.  La cola es representada utilizando
+ * 				una lista circular.
  */
 
 /**
@@ -26,6 +27,7 @@ public class CircularBanco {
 		System.out.println("              ---------------------------------------");
 		System.out.println("              --      Bienvenido al banco UVG      --");
 		System.out.println("              ---------------------------------------");
+		System.out.println("A continuacion ingrese el tiempo de llegada de cada cliente: ");
 		
 		CircularQueue<Client<Integer>> ventanilla1 = new CircularQueue<Client<Integer>>();
 		CircularQueue<Client<Integer>> ventanilla2 = new CircularQueue<Client<Integer>>();
@@ -37,23 +39,14 @@ public class CircularBanco {
 		
 		int entrada[]=new int[40];
 		
-		int t_wait_1=0;
-		int t_wait_2=0;
-		int t_wait_3=0;
-		int t_wait_4=0;
-		
 		int t_arrival=0;
 		int clientes_ingresados=0;
 		
 		int tiempos[]=new int[4];
-		
-		int total=0;
-		
-		
-		
+		int total=0;	
 		
 			do{
-				t_arrival = (int)ingresar("Ingrese el tiempo de llegada del cliente "+(clientes_ingresados +1)+" o un numero negativo para terminar", "El dato ingresado no es valido");
+				t_arrival = (int)ingresar("Cliente "+(clientes_ingresados +1)+"(o -1 para terminar): ", "El dato ingresado no es valido");
 				if(clientes_ingresados==0){
 					if(t_arrival>0 && t_arrival<481){
 						entrada[clientes_ingresados]=t_arrival;
@@ -75,7 +68,7 @@ public class CircularBanco {
 			
 			
 			
-			System.out.println(" La cantidad de clientes fue: "+clientes_ingresados);
+			//System.out.println(" La cantidad de clientes fue: "+clientes_ingresados);
 			
 			createEventList(eventos,entrada,clientes_ingresados);
 			
@@ -84,7 +77,10 @@ public class CircularBanco {
 			total=tiempos[0]+tiempos[1]+tiempos[2]+tiempos[3];
 			total=total/clientes_ingresados;
 			
-			System.out.println("El tiempo promedio es : " + total );
+			System.out.println(" ++++++++++++++++++++++++++++++++++++++++++++++++++++");
+			System.out.println(" |  La cantidad de clientes fue: "+clientes_ingresados+"                 |");
+			System.out.println(" |  El tiempo promedio de espera es : " + total +"            |" );
+			System.out.println(" ++++++++++++++++++++++++++++++++++++++++++++++++++++");
 			
 
 	}
@@ -139,7 +135,7 @@ public class CircularBanco {
 	public static void createEventList(LinkedList<Client<Integer>> events, int[] ingreso,int ingresados){
 		Random rand = new Random();
 		for(int i=0; i<ingresados;i++){
-			events.add(new Client<Integer>(ingreso[i],rand.nextInt(31)+1,-1));
+			events.add(new Client<Integer>(ingreso[i],rand.nextInt(30)+1,-1));
 		}		
 	}
 	
@@ -156,7 +152,6 @@ public class CircularBanco {
 	 */
 	public static int[] executeEventList(LinkedList<Client<Integer>> events, int[] ingreso, CircularQueue<Client<Integer>> c1,  CircularQueue<Client<Integer>> c2,  CircularQueue<Client<Integer>> c3,  CircularQueue<Client<Integer>> c4){
 		//Random rand = new Random();
-		int procesados=0;
 		
 		int[] promedios = new int[4];			//Arreglo que almacena el tiempo promedio para cada 
 		promedios[0]=0;							//Tiempo promedio de cola 1
@@ -179,7 +174,7 @@ public class CircularBanco {
 		Client<Integer>	temp9 = null;
 		Client<Integer>	tempo = null;
 		
-		printEventList(events);
+		//printEventList(events);
 		
 		do{
 		if(!events.isEmpty()){
@@ -191,18 +186,18 @@ public class CircularBanco {
 			if(cola_temp==c1){	//Comparar si la cola de menor tamaño es la cola 1
 				if(c1.isEmpty()){
 					c1.offer(new Client<Integer>(temp.getArrival(),temp.getDuration(),temp.getArrival()+temp.getDuration())); //Añadir a la cola
-					System.out.println("****************************************************");
-					printEventList(events);
-					System.out.println("****************************************************");
+					//System.out.println("****************************************************");
+					//printEventList(events);
+					//System.out.println("****************************************************");
 					temp2=c1.element();
 					temp3=temp2;
 				}else{
 					temp3 = new Client<Integer>(temp.getArrival(),temp.getDuration(),temp2.getRetreival()+temp.getDuration());
 					c1.offer(temp3);
 					temp2= temp3;	
-					System.out.println("****************************************************");
-					printEventList(events);
-					System.out.println("****************************************************");
+					//System.out.ln("****************************************************");
+					//printEventList(events);
+					//System.out.println("****************************************************");
 					
 				}
 				
@@ -394,6 +389,10 @@ public class CircularBanco {
     }
    
   
+   /**
+    * Permite imprimir una lista de Eventos enviada
+    * @param eventoss	La lista a imprimir
+    */
    	public static void printEventList(LinkedList<Client<Integer>> eventoss){
    		System.out.println("-----------------------------------------------------");
    		for(int k=0; k<eventoss.size(); k++){
