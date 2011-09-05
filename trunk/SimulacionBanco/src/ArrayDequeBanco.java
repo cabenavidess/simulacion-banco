@@ -1,4 +1,4 @@
-
+import java.util.ArrayDeque;
 import java.util.InputMismatchException;
 import java.util.LinkedList;
 import java.util.Random;
@@ -16,7 +16,7 @@ import java.util.Scanner;
  * @author Medrano
  *
  */
-public class CircularBanco {
+public class ArrayDequeBanco {
 
 	/**
 	 * Método principal. Es el que se ejecuta al crear esta clase.
@@ -30,10 +30,10 @@ public class CircularBanco {
 		System.out.println("              ---------------------------------------");
 		System.out.println("A continuacion ingrese el tiempo de llegada de cada cliente: ");
 		
-		CircularQueue<Client<Integer>> ventanilla1 = new CircularQueue<Client<Integer>>();
-		CircularQueue<Client<Integer>> ventanilla2 = new CircularQueue<Client<Integer>>();
-		CircularQueue<Client<Integer>> ventanilla3 = new CircularQueue<Client<Integer>>();
-		CircularQueue<Client<Integer>> ventanilla4 = new CircularQueue<Client<Integer>>();
+		ArrayDeque<Client<Integer>> ventanilla1 = new ArrayDeque<Client<Integer>>();
+		ArrayDeque<Client<Integer>> ventanilla2 = new ArrayDeque<Client<Integer>>();
+		ArrayDeque<Client<Integer>> ventanilla3 = new ArrayDeque<Client<Integer>>();
+		ArrayDeque<Client<Integer>> ventanilla4 = new ArrayDeque<Client<Integer>>();
 		
 		LinkedList<Client<Integer>> eventos = new LinkedList<Client<Integer>>();
 		
@@ -93,9 +93,9 @@ public class CircularBanco {
 	 * @param c2	Representa la ventanilla 2
 	 * @param c3	Representa la ventanilla 3
 	 * @param c4	Representa la ventanilla 4
-	 * @return		CircularQueue<Cliente<Integer>> ventanilla 		Referencia a la ventanilla mas corta
+	 * @return		ArrayDeque<Cliente<Integer>> ventanilla 		Referencia a la ventanilla mas corta
 	 */
-	public static CircularQueue<Client<Integer>> getSmallerQueue(CircularQueue<Client<Integer>> c1,  CircularQueue<Client<Integer>> c2,  CircularQueue<Client<Integer>> c3,  CircularQueue<Client<Integer>> c4){
+	public static ArrayDeque<Client<Integer>> getSmallerQueue(ArrayDeque<Client<Integer>> c1,  ArrayDeque<Client<Integer>> c2,  ArrayDeque<Client<Integer>> c3,  ArrayDeque<Client<Integer>> c4){
 		
 		int sizes[] = new int[4];
 		int menor = 0;
@@ -151,7 +151,7 @@ public class CircularBanco {
 	 * @param c4			Ventanilla 4	
 	 * @return				Arreglo de tiempos promedio por cada cola
 	 */
-	public static int[] executeEventList(LinkedList<Client<Integer>> events, int[] ingreso, CircularQueue<Client<Integer>> c1,  CircularQueue<Client<Integer>> c2,  CircularQueue<Client<Integer>> c3,  CircularQueue<Client<Integer>> c4){
+	public static int[] executeEventList(LinkedList<Client<Integer>> events, int[] ingreso, ArrayDeque<Client<Integer>> c1,  ArrayDeque<Client<Integer>> c2,  ArrayDeque<Client<Integer>> c3,  ArrayDeque<Client<Integer>> c4){
 		//Random rand = new Random();
 		
 		int[] promedios = new int[4];			//Arreglo que almacena el tiempo promedio para cada 
@@ -163,7 +163,7 @@ public class CircularBanco {
 
 		int esperado=0;
 		
-		CircularQueue<Client<Integer>> cola_temp;		//Este es el evento que se esta ejecutnado actualmente
+		ArrayDeque<Client<Integer>> cola_temp;		//Este es el evento que se esta ejecutnado actualmente
 		
 		Client<Integer> temp2 = null;					//Permite guardar una referencia al ultimo elemento de cada ventanilla
 		Client<Integer>	temp3 = null;
