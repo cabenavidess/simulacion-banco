@@ -9,7 +9,7 @@ import java.util.Scanner;
  * Descripcion: Este programa permite simular el comportamiento de las colas en un banco.
  * 				Se tienen 4 ventanillas en el banco, una cola de ingreso y las acciones se
  * 				manejan a traves de una lista de eventos.  La cola es representada utilizando
- * 				una lista circular.
+ * 				un ArrayDeque del JCF
  */
 
 /**
