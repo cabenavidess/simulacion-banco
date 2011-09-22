@@ -84,6 +84,10 @@ public class HeapBanco {
 
 	}
 	
+
+
+
+
 	/**
 	 * Permite Obtener una referencia a la lista cjya dimension sea la más pequeña. Esto es util para 
 	 * poder añadir un cliente a esta lista.
@@ -131,10 +135,10 @@ public class HeapBanco {
 	 * @param events		Lista de eventos 
 	 * @param ingreso		Arreglo con los clientes ingresados
 	 */
-	public static void createEventList(LinkedList<Client<Integer>> events, int[] ingreso,int ingresados){
+	public static void createEventList(PriorityQueueHeap<Client<Integer>> events, int[] ingreso,int ingresados){
 		Random rand = new Random();
 		for(int i=0; i<ingresados;i++){
-			events.add(new Client<Integer>(ingreso[i],rand.nextInt(30)+1,-1));
+			events.offer(new Client<Integer>(ingreso[i],rand.nextInt(30)+1,-1));
 		}		
 	}
 	
@@ -149,7 +153,7 @@ public class HeapBanco {
 	 * @param c4			Ventanilla 4	
 	 * @return				Arreglo de tiempos promedio por cada cola
 	 */
-	public static int[] executeEventList(LinkedList<Client<Integer>> events, int[] ingreso, CircularQueue<Client<Integer>> c1,  CircularQueue<Client<Integer>> c2,  CircularQueue<Client<Integer>> c3,  CircularQueue<Client<Integer>> c4){
+	public static int[] executeEventList(PriorityQueueHeap<Client<Integer>> events, int[] ingreso, CircularQueue<Client<Integer>> c1,  CircularQueue<Client<Integer>> c2,  CircularQueue<Client<Integer>> c3,  CircularQueue<Client<Integer>> c4){
 		//Random rand = new Random();
 		
 		int[] promedios = new int[4];			//Arreglo que almacena el tiempo promedio para cada 
@@ -178,7 +182,7 @@ public class HeapBanco {
 		do{
 		if(!events.isEmpty()){
 		
-		Client<Integer> temp = events.removeFirst();	//Procesar el primer elemento de la lista de eventos
+		Client<Integer> temp = events.remove();	//Procesar el primer elemento de la lista de eventos
 		
 		if(temp.getRetreival()==-1){		//Verificar si es evento de entrada
 			cola_temp = getSmallerQueue(c1,c2,c3,c4);	//Obtener cuál de las colas tiene menor tamaño
@@ -201,9 +205,12 @@ public class HeapBanco {
 				}
 				
 				if(events.isEmpty()){		//Si la lista de eventos esta vacia ahora, añadir el evento de salida sin más
-					events.add(new Client<Integer>(temp3.getRetreival(),1,-2));		// Añadir evento de salida (Ocurrencia, # de cola, -2 indica que es salida)
+					events.offer(new Client<Integer>(temp3.getRetreival(),1,-2));		// Añadir evento de salida (Ocurrencia, # de cola, -2 indica que es salida)
 				}else{						//Si la lista no esta vacia, buscar la posicion en donde debe ir este evento de salida
 					Client<Integer> eventosalida = new Client<Integer>(temp3.getRetreival(),1,-2);
+					
+					events.offer(eventosalida);
+					/*
 					for(int j=0; j<=events.size(); j++){	//Recorrer toda la lsita de eventos		
 						if(j==events.size()){				//Si no hay ningun evento que suceda despues que este evento de salida
 							events.add(eventosalida);		// Añadirlo al final
@@ -219,7 +226,8 @@ public class HeapBanco {
 							}
 						}	
 						
-					}					
+					}
+					*/
 				}
 			
 			}
@@ -235,9 +243,11 @@ public class HeapBanco {
 				}
 				
 				if(events.isEmpty()){		//Si la lista de eventos esta vacia ahora, añadir el evento de salida sin más
-					events.add(new Client<Integer>(temp5.getRetreival(),2,-2));		// Añadir evento de salida (Ocurrencia, # de cola, -2 indica que es salida)
+					events.offer(new Client<Integer>(temp5.getRetreival(),2,-2));		// Añadir evento de salida (Ocurrencia, # de cola, -2 indica que es salida)
 				}else{						//Si la lista no esta vacia, buscar la posicion en donde debe ir este evento de salida
 					Client<Integer> eventosalida = new Client<Integer>(temp5.getRetreival(),2,-2);
+					events.offer(eventosalida);
+					/*
 					for(int j=0; j<=events.size(); j++){	//Recorrer toda la lsita de eventos		
 						if(j==events.size()){				//Si no hay ningun evento que suceda despues que este evento de salida
 							events.add(eventosalida);		// Añadirlo al final
@@ -253,7 +263,8 @@ public class HeapBanco {
 							}
 						}	
 						
-					}					
+					}	
+					*/
 				}
 			
 			}
@@ -269,9 +280,11 @@ public class HeapBanco {
 				}
 				
 				if(events.isEmpty()){		//Si la lista de eventos esta vacia ahora, añadir el evento de salida sin más
-					events.add(new Client<Integer>(temp7.getRetreival(),3,-2));		// Añadir evento de salida (Ocurrencia, # de cola, -2 indica que es salida)
+					events.offer(new Client<Integer>(temp7.getRetreival(),3,-2));		// Añadir evento de salida (Ocurrencia, # de cola, -2 indica que es salida)
 				}else{						//Si la lista no esta vacia, buscar la posicion en donde debe ir este evento de salida
 					Client<Integer> eventosalida = new Client<Integer>(temp7.getRetreival(),3,-2);
+					events.offer(eventosalida);
+					/*
 					for(int j=0; j<=events.size(); j++){	//Recorrer toda la lsita de eventos		
 						if(j==events.size()){				//Si no hay ningun evento que suceda despues que este evento de salida
 							events.add(eventosalida);		// Añadirlo al final
@@ -288,7 +301,7 @@ public class HeapBanco {
 							}
 						}	
 						
-					}					
+					}*/					
 				}
 			
 			}
@@ -304,9 +317,11 @@ public class HeapBanco {
 				}
 				
 				if(events.isEmpty()){		//Si la lista de eventos esta vacia ahora, añadir el evento de salida sin más
-					events.add(new Client<Integer>(temp9.getRetreival(),4,-2));		// Añadir evento de salida (Ocurrencia, # de cola, -2 indica que es salida)
+					events.offer(new Client<Integer>(temp9.getRetreival(),4,-2));		// Añadir evento de salida (Ocurrencia, # de cola, -2 indica que es salida)
 				}else{						//Si la lista no esta vacia, buscar la posicion en donde debe ir este evento de salida
 					Client<Integer> eventosalida = new Client<Integer>(temp9.getRetreival(),4,-2);
+					events.offer(eventosalida);
+					/*
 					for(int j=0; j<=events.size(); j++){	//Recorrer toda la lsita de eventos		
 						if(j==events.size()){				//Si no hay ningun evento que suceda despues que este evento de salida
 							events.add(eventosalida);		// Añadirlo al final
@@ -322,7 +337,8 @@ public class HeapBanco {
 							}
 						}	
 						
-					}					
+					}
+					*/
 				}
 			
 			}
