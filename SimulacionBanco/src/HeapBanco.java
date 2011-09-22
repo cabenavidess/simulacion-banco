@@ -33,13 +33,13 @@ public class HeapBanco {
 		CircularQueue<Client<Integer>> ventanilla3 = new CircularQueue<Client<Integer>>();
 		CircularQueue<Client<Integer>> ventanilla4 = new CircularQueue<Client<Integer>>();
 		
-		LinkedList<Client<Integer>> eventos = new LinkedList<Client<Integer>>();
+		PriorityQueueHeap<Client<Integer>> eventos = new PriorityQueueHeap<Client<Integer>>(1000);
 		
 		
-		int entrada[]=new int[40];
+		int entrada[]=new int[40];				//Arreglo que almacena los datos de ingreso especificados por el usuario
 		
 		int t_arrival=0;
-		int clientes_ingresados=0;
+		int clientes_ingresados=0;				//Contiene el numero de tiempos ingresados por el usuario
 		
 		int tiempos[]=new int[4];
 		int total=0;	
