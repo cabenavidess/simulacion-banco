@@ -11,23 +11,23 @@ import java.util.Collection;
 public class PriorityQueueHeap<E> extends AbstractQueue<E>{
 	
 	public Object datos[];
-	public int tamaño;
+	public int tamano;
 	
 	/**
 	 * Constructor	Permite crear una nueva cola con priorida utilizando un Heap
 	 */
-	public PriorityQueueHeap(int size){
-		datos = (E[]) new Object[size];
-		tamaño=0;		
+	public PriorityQueueHeap(int tamano){
+		datos = new Object[tamano];
+		tamano=0;		
 	}
 	
 	
 	public boolean add(E value)throws QueueFullException{
 		
 		try{
-			int pos = tamaño;             // virtual position of value
+			int pos = tamano;             // virtual position of value
 	        int pPos = (pos - 1) / 2;   // position of parent
-	        tamaño++;
+	        tamano++;
 	        Comparable<E> compValue = (Comparable<E>) value;
 	        while(pos > 0 && compValue.compareTo((E)datos[pPos]) < 0) {
 	            datos[pos] = datos[pPos]; // move parent into position
@@ -46,11 +46,11 @@ public class PriorityQueueHeap<E> extends AbstractQueue<E>{
 	 * @return	boolean  Indica si se pudo o no añadir el elemento
 	 */
 	public boolean offer(E value){
-		int pos = tamaño;             // virtual position of value
+		int pos = tamano;             // virtual position of value
         int pPos = (pos - 1) / 2;   // position of parent
-        tamaño++;
+        tamano++;
         Comparable<E> compValue = (Comparable<E>) value;
-        while(pos > 0 && compValue.compareTo((E)datos[pPos]) < 0) {
+        while(pos > 0 && compValue.compareTo((E)datos[pPos]) < (Integer) 0) {
             datos[pos] = datos[pPos]; // move parent into position
             pos = pPos;             // and step upward
             pPos = (pos - 1) / 2;
@@ -64,16 +64,16 @@ public class PriorityQueueHeap<E> extends AbstractQueue<E>{
 	 * Permite obtener y retirar el primer elemento en la cola
 	 */
 	public E remove(){
-		E ret = (E)datos[0];
-        tamaño--;                   // move last item to root,
-        Comparable<E> toTrickle = (Comparable<E>) datos[tamaño]; // trickle it down
-        datos[tamaño] = null;
+		E ret = (E) datos[0];
+        tamano--;                   // move last item to root,
+        Comparable<E> toTrickle = (Comparable<E>) datos[tamano]; // trickle it down
+        datos[tamano] = null;
         int pos = 0;
         while(true) {
             int less = 2 * pos + 1; // determine lesser of children
-            if(less >= tamaño) break;
+            if(less >= tamano) break;
             Comparable<E> left = (Comparable<E>) datos[less];
-            if(less + 1 < tamaño && left.compareTo((E)datos[less + 1]) > 0) {
+            if(less + 1 < tamano && left.compareTo((E)datos[less + 1]) > 0) {
                 less++;
             }
 
@@ -84,19 +84,20 @@ public class PriorityQueueHeap<E> extends AbstractQueue<E>{
         datos[pos] = (E) toTrickle;
 
        return ret;
+
 	}
 	
 	public E poll(){
 		E ret = (E)datos[0];
-        tamaño--;                   // move last item to root,
-        Comparable<E> toTrickle = (Comparable<E>) datos[tamaño]; // trickle it down
-        datos[tamaño] = null;
+        tamano--;                   // move last item to root,
+        Comparable<E> toTrickle = (Comparable<E>) datos[tamano]; // trickle it down
+        datos[tamano] = null;
         int pos = 0;
         while(true) {
             int less = 2 * pos + 1; // determine lesser of children
-            if(less >= tamaño) break;
+            if(less >= tamano) break;
             Comparable<E> left = (Comparable<E>) datos[less];
-            if(less + 1 < tamaño && left.compareTo((E)datos[less + 1]) > 0) {
+            if(less + 1 < tamano && left.compareTo((E)datos[less + 1]) > 0) {
                 less++;
             }
 
@@ -124,7 +125,7 @@ public class PriorityQueueHeap<E> extends AbstractQueue<E>{
 	}
 	
 	public int size(){
-		return tamaño;
+		return tamano;
 	}
 
 
@@ -190,7 +191,13 @@ public class PriorityQueueHeap<E> extends AbstractQueue<E>{
 		return null;
 	}
 	
-	
+	public String toString(){
+		String desc = "***";
+		for(int i = 0; i < tamano; i++){
+			desc+="| "+ datos[i].toString()+ "\n";
+		}
+		return desc;
+	}
 	
 	
 
