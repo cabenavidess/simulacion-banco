@@ -9,7 +9,7 @@
  * @author Medrano
  *
  */
-public class Client<E> {
+public class Client<E> implements Comparable<Client>{
 	
 	public E arrival;
 	public E duration;
@@ -111,6 +111,16 @@ public class Client<E> {
 		descripcion+= "Salida   :"+retreival+"  ";
 		return descripcion;
 	}
+
+	@Override
+	/**
+	 * Permite comparar dos objetos cliente
+	 */
+	public int compareTo(Client arg0) {
+		
+		return ((Integer)this.arrival - (Integer)arg0.getArrival());
+	}
+
 	
 	
 
