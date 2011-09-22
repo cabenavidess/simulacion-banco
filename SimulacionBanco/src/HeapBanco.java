@@ -33,7 +33,7 @@ public class HeapBanco {
 		CircularQueue<Client<Integer>> ventanilla3 = new CircularQueue<Client<Integer>>();
 		CircularQueue<Client<Integer>> ventanilla4 = new CircularQueue<Client<Integer>>();
 		
-		PriorityQueueHeap<Client<Integer>> eventos = new PriorityQueueHeap<Client<Integer>>(1000);
+		PriorityQueueHeap<Client<Integer>> eventos = new PriorityQueueHeap<Client<Integer>>(10000);
 		
 		
 		int entrada[]=new int[40];				//Arreglo que almacena los datos de ingreso especificados por el usuario
@@ -70,6 +70,9 @@ public class HeapBanco {
 			//System.out.println(" La cantidad de clientes fue: "+clientes_ingresados);
 			
 			createEventList(eventos,entrada,clientes_ingresados);
+			
+			System.out.println("El tamaño de la lista de eventos es: "+eventos.size());
+			
 			
 			tiempos = executeEventList(eventos,entrada,ventanilla1,ventanilla2,ventanilla3,ventanilla4);
 		
@@ -139,6 +142,7 @@ public class HeapBanco {
 		Random rand = new Random();
 		for(int i=0; i<ingresados;i++){
 			events.offer(new Client<Integer>(ingreso[i],rand.nextInt(30)+1,-1));
+			System.out.println("El tamaño nuevo es "+ events.size());
 		}		
 	}
 	
@@ -180,9 +184,12 @@ public class HeapBanco {
 		//printEventList(events);
 		
 		do{
-		if(!events.isEmpty()){
+		if(events.size()!=0){
 		
+			
 		Client<Integer> temp = events.remove();	//Procesar el primer elemento de la lista de eventos
+		
+		System.out.println(events);
 		
 		if(temp.getRetreival()==-1){		//Verificar si es evento de entrada
 			cola_temp = getSmallerQueue(c1,c2,c3,c4);	//Obtener cuál de las colas tiene menor tamaño
@@ -374,7 +381,7 @@ public class HeapBanco {
 		}
 		}
 		
-		}while(!events.isEmpty());
+		}while(events.size()!=0);
 		
 		return promedios;
 		
