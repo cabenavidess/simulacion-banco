@@ -64,15 +64,8 @@ public class HeapBanco {
 					}
 				}
 			}while(t_arrival>=0 && clientes_ingresados<40);
-			
-			
-			
-			//System.out.println(" La cantidad de clientes fue: "+clientes_ingresados);
-			
+						
 			createEventList(eventos,entrada,clientes_ingresados);
-			
-			System.out.println("El tamaño de la lista de eventos es: "+eventos.size());
-			
 			
 			tiempos = executeEventList(eventos,entrada,ventanilla1,ventanilla2,ventanilla3,ventanilla4);
 		
@@ -142,7 +135,6 @@ public class HeapBanco {
 		Random rand = new Random();
 		for(int i=0; i<ingresados;i++){
 			events.offer(new Client<Integer>(ingreso[i],rand.nextInt(30)+1,-1));
-			System.out.println("El tamaño nuevo es "+ events.size());
 		}		
 	}
 	
@@ -189,25 +181,20 @@ public class HeapBanco {
 			
 		Client<Integer> temp = events.remove();	//Procesar el primer elemento de la lista de eventos
 		
-		System.out.println(events);
 		
 		if(temp.getRetreival()==-1){		//Verificar si es evento de entrada
 			cola_temp = getSmallerQueue(c1,c2,c3,c4);	//Obtener cuál de las colas tiene menor tamaño
 			if(cola_temp==c1){	//Comparar si la cola de menor tamaño es la cola 1
 				if(c1.isEmpty()){
 					c1.offer(new Client<Integer>(temp.getArrival(),temp.getDuration(),temp.getArrival()+temp.getDuration())); //Añadir a la cola
-					//System.out.println("****************************************************");
-					//printEventList(events);
-					//System.out.println("****************************************************");
+
 					temp2=c1.element();
 					temp3=temp2;
 				}else{
 					temp3 = new Client<Integer>(temp.getArrival(),temp.getDuration(),temp2.getRetreival()+temp.getDuration());
 					c1.offer(temp3);
 					temp2= temp3;	
-					//System.out.ln("****************************************************");
-					//printEventList(events);
-					//System.out.println("****************************************************");
+
 					
 				}
 				
@@ -217,24 +204,7 @@ public class HeapBanco {
 					Client<Integer> eventosalida = new Client<Integer>(temp3.getRetreival(),1,-2);
 					
 					events.offer(eventosalida);
-					/*
-					for(int j=0; j<=events.size(); j++){	//Recorrer toda la lsita de eventos		
-						if(j==events.size()){				//Si no hay ningun evento que suceda despues que este evento de salida
-							events.add(eventosalida);		// Añadirlo al final
-							j=events.size()+3;		
-						}
-						else if(events.get(j).getArrival()> eventosalida.getArrival()){		//Si el tiempo de ocurrencia del evento en la posicion j es mayor
-							if(j==0){
-								events.addFirst(eventosalida);
-								j=events.size()+3;
-							}else{
-								events.add(j, eventosalida);								// que el tiempo de ocurrencia del evento de salida, entonces el evento
-								j=events.size()+3;											// de salida debe ir antes que este otro evento, y debe terminar la busqueda
-							}
-						}	
-						
-					}
-					*/
+					
 				}
 			
 			}
@@ -254,24 +224,7 @@ public class HeapBanco {
 				}else{						//Si la lista no esta vacia, buscar la posicion en donde debe ir este evento de salida
 					Client<Integer> eventosalida = new Client<Integer>(temp5.getRetreival(),2,-2);
 					events.offer(eventosalida);
-					/*
-					for(int j=0; j<=events.size(); j++){	//Recorrer toda la lsita de eventos		
-						if(j==events.size()){				//Si no hay ningun evento que suceda despues que este evento de salida
-							events.add(eventosalida);		// Añadirlo al final
-							j=events.size()+3;		
-						}
-						else if(events.get(j).getArrival()> eventosalida.getArrival()){		//Si el tiempo de ocurrencia del evento en la posicion j es mayor
-							if(j==0){
-								events.addFirst(eventosalida);
-								j=events.size()+3;
-							}else{
-								events.add(j, eventosalida);								// que el tiempo de ocurrencia del evento de salida, entonces el evento
-								j=events.size()+3;											// de salida debe ir antes que este otro evento, y debe terminar la busqueda
-							}
-						}	
 						
-					}	
-					*/
 				}
 			
 			}
@@ -291,24 +244,7 @@ public class HeapBanco {
 				}else{						//Si la lista no esta vacia, buscar la posicion en donde debe ir este evento de salida
 					Client<Integer> eventosalida = new Client<Integer>(temp7.getRetreival(),3,-2);
 					events.offer(eventosalida);
-					/*
-					for(int j=0; j<=events.size(); j++){	//Recorrer toda la lsita de eventos		
-						if(j==events.size()){				//Si no hay ningun evento que suceda despues que este evento de salida
-							events.add(eventosalida);		// Añadirlo al final
-							j=events.size()+3;		
-						}
-						else if(events.get(j).getArrival()> eventosalida.getArrival()){		//Si el tiempo de ocurrencia del evento en la posicion j es mayor
-							if(j==0){
-								events.addFirst(eventosalida);
-								j=events.size()+3;
-								
-							}else{
-								events.add(j, eventosalida);								// que el tiempo de ocurrencia del evento de salida, entonces el evento
-								j=events.size()+3;											// de salida debe ir antes que este otro evento, y debe terminar la busqueda
-							}
-						}	
-						
-					}*/					
+										
 				}
 			
 			}
@@ -328,24 +264,7 @@ public class HeapBanco {
 				}else{						//Si la lista no esta vacia, buscar la posicion en donde debe ir este evento de salida
 					Client<Integer> eventosalida = new Client<Integer>(temp9.getRetreival(),4,-2);
 					events.offer(eventosalida);
-					/*
-					for(int j=0; j<=events.size(); j++){	//Recorrer toda la lsita de eventos		
-						if(j==events.size()){				//Si no hay ningun evento que suceda despues que este evento de salida
-							events.add(eventosalida);		// Añadirlo al final
-							j=events.size()+3;		
-						}
-						else if(events.get(j).getArrival()> eventosalida.getArrival()){		//Si el tiempo de ocurrencia del evento en la posicion j es mayor
-							if(j==0){
-								events.addFirst(eventosalida);
-								j=events.size()+3;
-							}else{
-								events.add(j, eventosalida);								// que el tiempo de ocurrencia del evento de salida, entonces el evento
-								j=events.size()+3;											// de salida debe ir antes que este otro evento, y debe terminar la busqueda
-							}
-						}	
-						
-					}
-					*/
+					
 				}
 			
 			}
