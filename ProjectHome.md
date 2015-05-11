@@ -1,0 +1,1 @@
+Este proyecto contiene código Java que permite realizar la simulacion de un banco con 4 ventanillas y 1 entrada. Permite obtener datos del tiempo promedio de espera de los clientes de un banco. Se utilizan interfaces, clases abstractas y colas implementadas a traves de listas circulares y arreglos.
